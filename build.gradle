@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+}
+
+group 'eu.miopowered'
+version '1.0'
+
+targetCompatibility = sourceCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:30.1.1-jre'
+    implementation 'com.google.code.gson:gson:2.8.7'
+    implementation 'org.jetbrains:annotations:16.0.2'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Version': archiveVersion
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
