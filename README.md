@@ -24,3 +24,5 @@ dependencies {
   implementation 'eu.miopowered:repository:1.0'
 }
 ```
+
+## Usage
