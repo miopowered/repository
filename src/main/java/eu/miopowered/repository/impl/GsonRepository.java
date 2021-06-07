@@ -67,7 +67,7 @@ public class GsonRepository<T extends Key> implements Repository<T> {
     public Optional<T> find(@NotNull Key key) {
         try {
             return Optional.ofNullable(
-                    this.fromJson(Files.readString(this.directory.resolve(this.keyAsFileName(key))))
+                    this.fromJson(new String(Files.readAllBytes(this.directory.resolve(this.keyAsFileName(key)))))
             );
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Could not found any element with that key.", e);
@@ -78,9 +78,9 @@ public class GsonRepository<T extends Key> implements Repository<T> {
     @Override
     public boolean insert(@NotNull T object) {
         try {
-            Files.writeString(
+            Files.write(
                     this.directory.resolve(this.keyAsFileName(object)),
-                    this.toJson(object),
+                    this.toJson(object).getBytes(),
                     StandardOpenOption.CREATE_NEW
             );
             return true;
@@ -93,9 +93,9 @@ public class GsonRepository<T extends Key> implements Repository<T> {
     @Override
     public boolean update(@NotNull T object) {
         try {
-            Files.writeString(
+            Files.write(
                     this.directory.resolve(this.keyAsFileName(object)),
-                    this.toJson(object),
+                    this.toJson(object).getBytes(),
                     StandardOpenOption.CREATE,
                     StandardOpenOption.WRITE,
                     StandardOpenOption.TRUNCATE_EXISTING
@@ -119,7 +119,7 @@ public class GsonRepository<T extends Key> implements Repository<T> {
 
     private String read(Path path) {
         try {
-            return Files.readString(path);
+            return new String(Files.readAllBytes(path));
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error occurred while reading data.", e);
             return null;
